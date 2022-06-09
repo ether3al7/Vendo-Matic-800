@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class VendingMachine {
+    //After the product is dispensed, the machine must update
+    // its balance accordingly and return the customer to the Purchase menu.
+    private int currentStock = 5;
 
    // private String "A1|Potato Crisps|3.05|Chip" = 5
 
@@ -37,11 +40,13 @@ public class VendingMachine {
 
         System.out.print(line);
 
-      //  System.out.println(vendingMachineProducts.toString());
     }
 
+    public int getCurrentStock() {
+        return currentStock;
+    }
 
-
-
-
+    public void setCurrentStock(int currentStock) {
+        this.currentStock = currentStock;
+    }
 }

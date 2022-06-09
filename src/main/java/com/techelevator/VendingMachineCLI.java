@@ -52,6 +52,7 @@ public class VendingMachineCLI {
 					userInput = sc.nextInt();
 
 				}else if (userInput == 2){
+					//Selecting "(2) Select Product" allows the customer to select a product to purchase
 
 
 				}else if (userInput == 3){
