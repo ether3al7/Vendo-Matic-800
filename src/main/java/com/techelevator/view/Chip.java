@@ -1,11 +1,6 @@
 package com.techelevator.view;
 
-public class Chip extends InventoryItem{
-
-    public Chip(String slot, String name, Double price, String type, int currentStock) {
-        super(slot, name, price, type, currentStock);
-
-        }
+public class Chip extends InventoryItem {
 
     public Chip(String name, Double price) {
         super(name, price);

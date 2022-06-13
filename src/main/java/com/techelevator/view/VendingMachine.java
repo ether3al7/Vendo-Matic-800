@@ -2,15 +2,19 @@ package com.techelevator.view;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.TreeMap;
 
 public class VendingMachine {
 
     private Map<String, InventoryItem>vendingMachineStock = new TreeMap<>(); // <-- TreeMap sorts key by ascending order
-    // hashmaps are unordered, when printed keys rows will be randomized, spent way too much time on this :)
+    // hashmaps are unordered, when printed keys rows will be randomized
+    private Double amount = 0.00; // storing money user inputs
 
     public void createVendingMachine(){
-
+        //created map to store .csv file, looping thru to get text
+        //stored abstract class InventoryItem as value for map
         String line = "";
         String csvFile = "capstone-1/vendingmachine.csv";
         try {
@@ -35,7 +39,7 @@ public class VendingMachine {
                     vendingMachineStock.put(products[0], drink);
 
                 } else if (products[3].equals("Candy")) {
-                    Double candyPrice = Double.parseDouble(products[2]); // You get it by now...right?
+                    Double candyPrice = Double.parseDouble(products[2]);
                     Candy candy = new Candy(products[1], candyPrice);
                     vendingMachineStock.put(products[0], candy);
 
@@ -47,15 +51,49 @@ public class VendingMachine {
 
             }
 
-
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Map<String, InventoryItem> getVendingMachineStock() {
-        return vendingMachineStock;
+    public void displayVendingMachine(){
+        //looping thru using getters in sub classes to print values
+        for (Map.Entry<String, InventoryItem> m : vendingMachineStock.entrySet()){
+            System.out.println(m.getKey() + "|" +  m.getValue().getName() + "|" +  m.getValue().getPrice() + "|Stock: " + m.getValue().getCurrentStock());
+        }
     }
+
+    public void selectProduct(String productCode) {
+
+
+            if (!(vendingMachineStock.containsKey(productCode))) {
+                System.out.println("Not a valid entry");
+
+            } if (vendingMachineStock.containsKey(productCode) && amount >= vendingMachineStock.get(productCode).getPrice()) {
+                amount -= vendingMachineStock.get(productCode).getPrice();
+                vendingMachineStock.get(productCode).decreaseCurrentStock();
+                System.out.println(vendingMachineStock.get(productCode).dispense());
+                //   System.out.println(vendingMachineStock.get(productCode).getCurrentStock());
+            } else if (!(amount >= vendingMachineStock.get(productCode).getPrice())) {
+                System.out.println("Not enough money");
+            }
+
+
+        System.out.println("Amount Remaining: " + amount);
+    }
+
+    public void feedMoney(Double amountEntered){
+
+        this.amount += amountEntered;
+        System.out.println("Amount Remaining: " + amount);
+
+    }
+
+    public void giveChange(){
+       // working on this
+
+    }
+
 
 
 }

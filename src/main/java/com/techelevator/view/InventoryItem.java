@@ -10,19 +10,10 @@ public abstract class InventoryItem {
     //added method to decrement currentStock at the bottom
     //also created 2 argument constructors for classes that extend, saves code...for now
 
-    public InventoryItem(String slot, String name, Double price, String type, int currentStock){
-        this.slot = slot;
-        this.name = name;
-        this.price = price;
-        this.type = type;
-        this.currentStock = currentStock;
-    }
-
 
     public InventoryItem(String name, Double price) {
         this.name = name;
         this.price = price;
-        this.currentStock = 5;
     }
 
 
@@ -30,16 +21,8 @@ public abstract class InventoryItem {
         return name;
     }
 
-    public String getSlot() {
-        return slot;
-    }
-
     public Double getPrice() {
         return price;
-    }
-
-    public String getType() {
-        return type;
     }
 
     public int getCurrentStock() {
