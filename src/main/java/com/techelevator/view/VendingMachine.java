@@ -58,8 +58,12 @@ public class VendingMachine {
 
     public void displayVendingMachine(){
         //looping thru using getters in sub classes to print values
-        for (Map.Entry<String, InventoryItem> m : vendingMachineStock.entrySet()){
-            System.out.println(m.getKey() + "|" +  m.getValue().getName() + "|" +  m.getValue().getPrice() + "|Stock: " + m.getValue().getCurrentStock());
+        for (Map.Entry<String, InventoryItem> m : vendingMachineStock.entrySet()) {
+            if (m.getValue().getCurrentStock() == 0) {
+                System.out.println(m.getKey() + "|" + m.getValue().getName() + "|" + m.getValue().getPrice() + "|Sold Out! "); // added line for if sold out
+            } else {
+                System.out.println(m.getKey() + "|" + m.getValue().getName() + "|" + m.getValue().getPrice() + "|Stock: " + m.getValue().getCurrentStock());
+            }
         }
     }
 
@@ -69,17 +73,26 @@ public class VendingMachine {
             if (!(vendingMachineStock.containsKey(productCode))) {
                 System.out.println("Not a valid entry");
 
-            } if (vendingMachineStock.containsKey(productCode) && amount >= vendingMachineStock.get(productCode).getPrice()) {
-                amount -= vendingMachineStock.get(productCode).getPrice();
-                vendingMachineStock.get(productCode).decreaseCurrentStock();
-                System.out.println(vendingMachineStock.get(productCode).dispense());
-                //   System.out.println(vendingMachineStock.get(productCode).getCurrentStock());
-            } else if (!(amount >= vendingMachineStock.get(productCode).getPrice())) {
-                System.out.println("Not enough money");
+            } else if (vendingMachineStock.containsKey(productCode)) {
+
+                if (vendingMachineStock.get(productCode).getCurrentStock() > 0) { // <-- if product is in stock
+
+                    if (amount >= vendingMachineStock.get(productCode).getPrice()) {
+                        amount -= vendingMachineStock.get(productCode).getPrice();
+                        vendingMachineStock.get(productCode).decreaseCurrentStock();
+                        System.out.println(vendingMachineStock.get(productCode).dispense());
+                        //   System.out.println(vendingMachineStock.get(productCode).getCurrentStock());
+                    } else if (!(amount >= vendingMachineStock.get(productCode).getPrice())) {
+                        System.out.println("Not enough money");
+                    }
+                } else {   //<-- currentStock = 0
+                    System.out.println("Sold Out!");
+                }
             }
 
 
-        System.out.println("Amount Remaining: " + amount);
+        System.out.println("Amount Remaining: " + Math.round((amount) * 100.00) / 100.00); //<-- using math.round to round 2 decimal places
+
     }
 
     public void feedMoney(Double amountEntered){
@@ -90,10 +103,35 @@ public class VendingMachine {
     }
 
     public void giveChange(){
+        //The customer's money is returned using nickels, dimes, and quarters (using the smallest amount of coins possible).
+        //The machine's current balance must be updated to $0 remaining.
+        //After completing their purchase, the user is returned to the "Main" menu to continue using the vending machine.
+       // DecimalFormat amountWithTwoDecimals = new DecimalFormat("0.00"); //<-- limiting amount to only two decimal places
+        double quarter = 0.25;
+        int quartersReturned = 0;
+        double dime = 0.10;
+        int dimesReturned = 0;
+        double nickel = 0.05;
+        int nickelsReturned = 0;
+        //.85   1.75   2.25   2.85
        // working on this
+          while ( amount > 0.00) {
+
+              if (amount >= quarter) {
+                  amount = Math.round((amount - quarter) * 100.00)/100.00;
+                  quartersReturned++;
+
+              } else if (amount >= dime) {
+                  amount = Math.round((amount - dime) * 100.00)/100.00;
+                  dimesReturned++;
+
+              } else if (amount >= nickel) {
+                  amount = Math.round((amount - nickel) * 100.00)/100.00;
+                  nickelsReturned++;
+              }
+          }
+
+        System.out.println("Your change is: " + quartersReturned + " Quarters, " + dimesReturned + " Dimes, " + nickelsReturned + " Nickels.") ;
 
     }
-
-
-
 }

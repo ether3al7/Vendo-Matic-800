@@ -6,7 +6,6 @@ public class Chip extends InventoryItem {
         super(name, price);
     }
 
-
     @Override
     public String dispense(){
 

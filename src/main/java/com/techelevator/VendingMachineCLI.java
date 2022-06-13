@@ -1,9 +1,11 @@
 package com.techelevator;
 
 
+import com.techelevator.view.LogItems;
 import com.techelevator.view.Menu;
 import com.techelevator.view.VendingMachine;
 
+import java.io.File;
 import java.util.Scanner;
 
 public class VendingMachineCLI {
@@ -17,8 +19,6 @@ public class VendingMachineCLI {
 	private static final String FINISH_TRANSACTION = "Finish Transaction";
 	private static final String[] PURCHASE_OPTIONS = {FEED_MONEY, SELECT_PRODUCT, FINISH_TRANSACTION};
 
-	//private double amount;
-
 	private Menu menu;
 
 	public VendingMachineCLI(Menu menu) {
@@ -29,8 +29,10 @@ public class VendingMachineCLI {
 	public void run() {
 		Scanner sc = new Scanner(System.in);
 		VendingMachine v  = new VendingMachine(); // <-- THIS was initially inside the While(True), in line 35, new instance was created everytime
-		// in new instance of vendingMachine, amount is initialized to 0, currentStock is set to 5;
+		// in a new instance of vendingMachine, amount is initialized to 0, currentStock is set to 5;
 		v.createVendingMachine();
+		File file = new File("capstone-1/vendingmachine.csv");
+		LogItems log = new LogItems();
 		while (true) {
 
 			String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
@@ -42,20 +44,23 @@ public class VendingMachineCLI {
 			} else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
 				// do purchase
 				while (true) { // added this line to keep user in PURCHASE_OPTIONS array
-					// After the product is dispensed, the machine must update its balance accordingly and return the customer to the Purchase menu.
+					// After the product is dispensed, the machine must update its balance accordingly AND return the customer to the Purchase menu.
 					String nextChoice = (String) menu.getChoiceFromOptions(PURCHASE_OPTIONS);
 
 					if (nextChoice.equals(FEED_MONEY)) {
 
+
 						System.out.println("Please Enter Amount");
 						double amountEntered = Double.parseDouble(sc.nextLine());
-						v.feedMoney(amountEntered); // <-- Enters money into vendingMachine
+						v.feedMoney(amountEntered); // <-- Enters money into vendingMachine, takes in double parameter
+						// log(amount, amount after method call)
+
 
 					} else if (nextChoice.equals(SELECT_PRODUCT)) {
 
 						System.out.println("Enter Code");
 						String codeEntered = sc.nextLine();
-						v.selectProduct(codeEntered);   // <-- Selecting product
+						v.selectProduct(codeEntered);   // <-- Selecting product, takes in String parameter
 
 					} else if (nextChoice.equals(FINISH_TRANSACTION)) {
 						v.giveChange(); // <-- working on this method

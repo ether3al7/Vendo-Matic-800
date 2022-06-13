@@ -1,10 +1,8 @@
 package com.techelevator.view;
 
 public abstract class InventoryItem {
-    private String slot;
     private String name;
     private Double price;
-    private String type;
     private int currentStock = 5; // <--added stock as 5 for all classes that extends... still working on this
 
     //added method to decrement currentStock at the bottom
