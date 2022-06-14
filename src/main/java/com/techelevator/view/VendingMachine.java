@@ -84,7 +84,10 @@ public class VendingMachine {
     }
 
     public void selectProduct(String productCode) {
-        double startAmount = amount; //<-- using this to store amount before code below executes
+        String startAmount = df.format(amount); //<-- using this to store amount before code below executes
+        String amountAsString = ""; //<-- using this for stylistic purposes in method print
+        // w/o df.format will print one decimal if 0 or .00001 after. Ex: 3.3 or 3.30001 instead of 3.30
+        // will update amountAsString using df.format once amount is updated below
 
             if (!(vendingMachineStock.containsKey(productCode))) {
                 System.out.println("Not a valid entry");
@@ -96,31 +99,32 @@ public class VendingMachine {
                     if (amount >= vendingMachineStock.get(productCode).getPrice()) { //<-- if can afford item
 
                         amount -= vendingMachineStock.get(productCode).getPrice(); //<-- updating amount variable
+                        amountAsString = df.format(Math.round((amount * 100.00)) /100.00); //<-- using Math.round to round decimals
+                                       // ^ using df.format to require 2 decimals regardless if 0 after (Stylistic purpose)
                         vendingMachineStock.get(productCode).decreaseCurrentStock(); //<-- decreasing stock in map by 1
                         System.out.println(vendingMachineStock.get(productCode).dispense()); //<-- printing String message
                         String productName = vendingMachineStock.get(productCode).getName(); //<-- getting name for parameter
 
-                        log.log(productName + " " + productCode + " $" + startAmount + " $" + amount);
-                        //^ log above is a test
-                        // logs using activity parameter, 2 args not necessary
+                        log.log(productName + " " + productCode + " $" + startAmount + " $" + amountAsString);
+                        // ^logs using activity parameter
+                        System.out.println("Amount Remaining: $" + amountAsString); //<-- printing amount as string w 2 mandatory decimals
 
                     } else if (!(amount >= vendingMachineStock.get(productCode).getPrice())) {
                         System.out.println("Not enough money");
                     }
                 } else {   //<-- currentStock = 0
                     System.out.println("Sold Out!");
+                    System.out.println("Amount Remaining: $" + startAmount);
                 }
             }
 
-        System.out.println("Amount Remaining: $" + Math.round((amount) * 100.00) / 100.00); //<-- using math.round to round 2 decimal places
-
     }
 
-    public void feedMoney(Double amountEntered){ //<-- updates amount variable in vendingMachine
+    public void feedMoney(Double amountEntered){ //<-- method call updates amount variable
         double startAmount = amount; //<-- amount before code below executes
         this.amount += amountEntered;
-        System.out.println("Amount Remaining: $" + df.format(amount));
-        // the log below is just a test to see if its printing the right format
+
+        System.out.println("Amount Remaining: $" + df.format(amount)); //<-- using df.format to print w 2 decimals
         log.log("FEED MONEY: $" + df.format(startAmount) + " $" + df.format(amount)); //<-- df.format takes in double, prints w 2 decimals
 
     }
@@ -128,21 +132,16 @@ public class VendingMachine {
     public void giveChange(){
         double startAmount = amount; //<-- amount before code below executes
 
-        //The customer's money is returned using nickels, dimes, and quarters (using the smallest amount of coins possible).
-        //The machine's current balance must be updated to $0 remaining.
-        //After completing their purchase, the user is returned to the "Main" menu to continue using the vending machine.
-
         int quartersReturned = 0;
         int dimesReturned = 0;
         int nickelsReturned = 0;
-        //.85   1.75   2.25   2.85
 
           while ( amount > 0.00) {
 
               if (amount >= QUARTER) { //<-- using final variables declared above
                   amount = Math.round((amount - QUARTER) * 100.00)/100.00;
                   //^amount is first subtracted by coin, then multiplied by 100 so Math can round properly,
-                  // then divided by 100 after rounding to get the correct value
+                  // then divided by 100 after rounding to get the correct, rounded value
                   quartersReturned++;
 
               } else if (amount >= DIME) {
@@ -154,10 +153,7 @@ public class VendingMachine {
                   nickelsReturned++;
               }
           }
-
-        System.out.println("Your change is: " + quartersReturned + " Quarters, " + dimesReturned + " Dimes, " + nickelsReturned + " Nickels.");
-        // the log below is just a test to see if it prints in the right format
+          System.out.println("Your change is: " + quartersReturned + " Quarters, " + dimesReturned + " Dimes, " + nickelsReturned + " Nickels.");
           log.log("GIVE CHANGE: $" + df.format(startAmount) + " $" + df.format(amount));
-
     }
 }
