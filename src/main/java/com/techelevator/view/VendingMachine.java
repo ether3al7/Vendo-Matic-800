@@ -11,13 +11,13 @@ import java.util.TreeMap;
 
 public class VendingMachine {
 
-    private Map<String, InventoryItem>vendingMachineStock = new TreeMap<>(); // <-- TreeMap sorts key by ascending order
+    private final Map<String, InventoryItem>vendingMachineStock = new TreeMap<>(); // <-- TreeMap sorts key by ascending order
     // hashmaps are unordered, when printed keys rows will be randomized
     private Double amount = 0.00; // storing money user inputs
     private static final double QUARTER = 0.25;
     private static final double DIME = 0.10;
     private static final double NICKEL = 0.05;
-    private static final DecimalFormat df = new DecimalFormat("0.00"); //<-- using this to format double, w/o it prints 0.0
+    private static final DecimalFormat df = new DecimalFormat("0.00"); //<-- using this to format double, w/o it prints 0.00
     Log log = new Log(); //<-- creating instance of log to use within methods
 
 
@@ -39,32 +39,38 @@ public class VendingMachine {
                 // 0        1        2    3
 
                 // using .split to turn file text into array
-                // adding products[] to treeMap
-                // storing productCode as key, inventoryItem as value in map
+                // adding products array to treeMap
+                // storing productCode[0] as key, inventoryItem as value in map
                 // inventoryItem takes in parameters String name & Double price
                 // all inventoryItems have currentStock initialized to 5 & have getters to access values outside of class
 
-                if (products[3].equals("Chip")) {   // <-- if index 3 of split string = Chip
-                    Double chipPrice = Double.parseDouble(products[2]); // <-- parsing string index 2 to double, this will be passed thru constructor
-                    Chip chip = new Chip(products[1], chipPrice);   // <--creating instance of chip, which takes in a String name and double
-                    vendingMachineStock.put(products[0], chip);   // <-- adding product code as String key, adding chip as inventoryItem value for map
+                switch (products[3]) {
+                    case "Chip":    // <-- if index 3 of split string = Chip
+                        Double chipPrice = Double.parseDouble(products[2]); // <-- parsing string index 2 to double, this will be passed thru constructor
+                        Chip chip = new Chip(products[1], chipPrice);   // <--creating instance of chip, which takes in a String name and double
+                        vendingMachineStock.put(products[0], chip);   // <-- adding product code as String key, adding chip as inventoryItem value for map
 
-                } else if (products[3].equals("Drink")) {
-                    Double drinkPrice = Double.parseDouble(products[2]); // same as above except for Drink
-                    Drink drink = new Drink(products[1], drinkPrice);
-                    vendingMachineStock.put(products[0], drink);
 
-                } else if (products[3].equals("Candy")) {
-                    Double candyPrice = Double.parseDouble(products[2]);
-                    Candy candy = new Candy(products[1], candyPrice);
-                    vendingMachineStock.put(products[0], candy);
+                        break;
+                    case "Drink":
+                        Double drinkPrice = Double.parseDouble(products[2]); // same as above except for Drink
 
-                } else if (products[3].equals("Gum")) {
-                    Double gumPrice = Double.parseDouble(products[2]);
-                    Gum gum = new Gum(products[1], gumPrice);
-                    vendingMachineStock.put(products[0], gum);
+                        Drink drink = new Drink(products[1], drinkPrice);
+                        vendingMachineStock.put(products[0], drink);
+
+                        break;
+                    case "Candy":
+                        Double candyPrice = Double.parseDouble(products[2]);
+                        Candy candy = new Candy(products[1], candyPrice);
+                        vendingMachineStock.put(products[0], candy);
+
+                        break;
+                    case "Gum":
+                        Double gumPrice = Double.parseDouble(products[2]);
+                        Gum gum = new Gum(products[1], gumPrice);
+                        vendingMachineStock.put(products[0], gum);
+                        break;
                 }
-
             }
 
         } catch (FileNotFoundException e) {
@@ -83,46 +89,49 @@ public class VendingMachine {
         }
     }
 
-    public void selectProduct(String productCode) {
+    public double selectProduct(String productCode) {
         String startAmount = df.format(amount); //<-- using this to store amount before code below executes
-        String amountAsString = ""; //<-- using this for stylistic purposes in method print
+        String amountInDfFormat = ""; //<-- using this for stylistic purposes in method print
         // w/o df.format will print one decimal if 0 or .00001 after. Ex: 3.3 or 3.30001 instead of 3.30
         // will update amountAsString using df.format once amount is updated below
 
-            if (!(vendingMachineStock.containsKey(productCode))) {
+            if (!(vendingMachineStock.containsKey(productCode))) { // <-- if doesn't exist
                 System.out.println("Not a valid entry");
 
-            } else if (vendingMachineStock.containsKey(productCode)) {
+            } else {   //<-- else, productCode user inputs DOES exist
 
                 if (vendingMachineStock.get(productCode).getCurrentStock() > 0) { // <-- if product is in stock
 
                     if (amount >= vendingMachineStock.get(productCode).getPrice()) { //<-- if can afford item
 
                         amount -= vendingMachineStock.get(productCode).getPrice(); //<-- updating amount variable
-                        amountAsString = df.format(Math.round((amount * 100.00)) /100.00); //<-- using Math.round to round decimals
-                                       // ^ using df.format to require 2 decimals regardless if 0 after (Stylistic purpose)
+                        amountInDfFormat = df.format(Math.round((amount * 100.00)) /100.00); //<-- using Math.round to round decimals
+                        //                 ^ using df.format to require 2 decimals regardless if 0 after (Stylistic purpose)
                         vendingMachineStock.get(productCode).decreaseCurrentStock(); //<-- decreasing stock in map by 1
                         System.out.println(vendingMachineStock.get(productCode).dispense()); //<-- printing String message
-                        String productName = vendingMachineStock.get(productCode).getName(); //<-- getting name for parameter
 
-                        log.log(productName + " " + productCode + " $" + startAmount + " $" + amountAsString);
+                        String productName = vendingMachineStock.get(productCode).getName(); //<-- getting name for log
+                        log.log(productName + " " + productCode + " $" + startAmount + " $" + amountInDfFormat);
                         // ^logs using activity parameter
-                        System.out.println("Amount Remaining: $" + amountAsString); //<-- printing amount as string w 2 mandatory decimals
+                        System.out.println("Amount Remaining: $" + amountInDfFormat); //<-- printing amount as string w 2 mandatory decimals
 
-                    } else if (!(amount >= vendingMachineStock.get(productCode).getPrice())) {
-                        System.out.println("Not enough money");
+                    } else { //<-- if amount isn't enough
+                        System.out.println("Not Enough Money!");
                     }
                 } else {   //<-- currentStock = 0
                     System.out.println("Sold Out!");
                     System.out.println("Amount Remaining: $" + startAmount);
                 }
             }
+          return amount;
 
     }
 
     public void feedMoney(Double amountEntered){ //<-- method call updates amount variable
+
+
         double startAmount = amount; //<-- amount before code below executes
-        this.amount += amountEntered;
+        this.amount += amountEntered; //<-- updating amount
 
         System.out.println("Amount Remaining: $" + df.format(amount)); //<-- using df.format to print w 2 decimals
         log.log("FEED MONEY: $" + df.format(startAmount) + " $" + df.format(amount)); //<-- df.format takes in double, prints w 2 decimals
@@ -155,5 +164,9 @@ public class VendingMachine {
           }
           System.out.println("Your change is: " + quartersReturned + " Quarters, " + dimesReturned + " Dimes, " + nickelsReturned + " Nickels.");
           log.log("GIVE CHANGE: $" + df.format(startAmount) + " $" + df.format(amount));
+    }
+
+    public Map<String, InventoryItem> getVendingMachineStock() {
+        return vendingMachineStock;
     }
 }

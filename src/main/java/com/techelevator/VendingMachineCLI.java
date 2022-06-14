@@ -7,7 +7,6 @@ import com.techelevator.view.VendingMachine;
 import java.util.Scanner;
 
 public class VendingMachineCLI {
-
 	private static final String MAIN_MENU_OPTION_DISPLAY_ITEMS = "Display Vending Machine Items";
 	private static final String MAIN_MENU_OPTION_PURCHASE = "Purchase";
 	private static final String MAIN_MENU_EXIT = "Exit";
@@ -16,7 +15,6 @@ public class VendingMachineCLI {
 	private static final String SELECT_PRODUCT = "Select Product";
 	private static final String FINISH_TRANSACTION = "Finish Transaction";
 	private static final String[] PURCHASE_OPTIONS = {FEED_MONEY, SELECT_PRODUCT, FINISH_TRANSACTION};
-
 	private Menu menu;
 
 	public VendingMachineCLI(Menu menu) {
@@ -44,11 +42,19 @@ public class VendingMachineCLI {
 					String nextChoice = (String) menu.getChoiceFromOptions(PURCHASE_OPTIONS);
 
 					if (nextChoice.equals(FEED_MONEY)) {
+						// Added try since .parseDouble may crash program if user inputs invalid format
+                        try {
+							System.out.println("Please Enter Amount");
+							double amountEntered = Double.parseDouble(sc.nextLine());
+							if(amountEntered == 1 || amountEntered == 2 || amountEntered == 5 || amountEntered == 10) {
+								v.feedMoney(amountEntered); // <-- Enters money into vendingMachine, takes in double parameter
+							}else {
+								System.out.println("Not A Valid Input!");
+							}
 
-						System.out.println("Please Enter Amount");
-						double amountEntered = Double.parseDouble(sc.nextLine());
-						v.feedMoney(amountEntered); // <-- Enters money into vendingMachine, takes in double parameter
-
+						} catch (NumberFormatException e) {
+							System.err.println("Not A Valid Entry!");
+						}
 
 					} else if (nextChoice.equals(SELECT_PRODUCT)) {
 
@@ -67,7 +73,6 @@ public class VendingMachineCLI {
 				  break; //<-- ends loop, same as above
 			}
 		}
-
 	}
 
 	public static void main(String[] args) {

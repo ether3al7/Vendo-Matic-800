@@ -37,7 +37,7 @@ public class Log {
     // Also, the append argument true can be removed from new FileOutputStream("logs/search.log")
     // if you'd like to start with a fresh log each time the application runs.
 
-    public void log(String activity){ //<-- using one parameter for activity
+    public void log(String activity){ //<-- using one String parameter for activity
         if (writer == null){       // Then, in the method, check if the variable is null. If it is,
                           // create an instance of PrintWriter and assign it to the class variable.
 
