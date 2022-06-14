@@ -84,6 +84,7 @@ public class VendingMachine {
     }
 
     public void selectProduct(String productCode) {
+        double startAmount = amount; //<-- using this to store amount before code below executes
 
             if (!(vendingMachineStock.containsKey(productCode))) {
                 System.out.println("Not a valid entry");
@@ -98,7 +99,10 @@ public class VendingMachine {
                         vendingMachineStock.get(productCode).decreaseCurrentStock(); //<-- decreasing stock in map by 1
                         System.out.println(vendingMachineStock.get(productCode).dispense()); //<-- printing String message
                         String productName = vendingMachineStock.get(productCode).getName(); //<-- getting name for parameter
-                        log.log(productName, productCode); //<-- logs using productName and productCode
+
+                        log.log(productName + " " + productCode + " $" + startAmount + " $" + amount);
+                        //^ log above is a test
+                        // logs using activity parameter, 2 args not necessary
 
                     } else if (!(amount >= vendingMachineStock.get(productCode).getPrice())) {
                         System.out.println("Not enough money");

@@ -21,11 +21,4 @@ public class Log {
 
         System.out.println(dtf.format(now) + " " + activity);
     }
-
-    public void log(String productName, String code){ //<-- using 2 parameters for product name & code
-        System.out.println(dtf.format(now) + " " + productName + " " + code);
-    }
-
-
-
 }
