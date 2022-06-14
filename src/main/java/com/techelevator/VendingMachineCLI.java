@@ -25,14 +25,12 @@ public class VendingMachineCLI {
 		this.menu = menu;
 	}
 
-
 	public void run() {
 		Scanner sc = new Scanner(System.in);
 		VendingMachine v  = new VendingMachine(); // <-- THIS was initially inside the While(True), in line 35, new instance was created everytime
 		// in a new instance of vendingMachine, amount is initialized to 0, currentStock is set to 5;
 		v.createVendingMachine();
-		File file = new File("capstone-1/vendingmachine.csv");
-		LogItems log = new LogItems();
+
 		while (true) {
 
 			String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
@@ -49,11 +47,9 @@ public class VendingMachineCLI {
 
 					if (nextChoice.equals(FEED_MONEY)) {
 
-
 						System.out.println("Please Enter Amount");
 						double amountEntered = Double.parseDouble(sc.nextLine());
 						v.feedMoney(amountEntered); // <-- Enters money into vendingMachine, takes in double parameter
-						// log(amount, amount after method call)
 
 
 					} else if (nextChoice.equals(SELECT_PRODUCT)) {
@@ -63,7 +59,7 @@ public class VendingMachineCLI {
 						v.selectProduct(codeEntered);   // <-- Selecting product, takes in String parameter
 
 					} else if (nextChoice.equals(FINISH_TRANSACTION)) {
-						v.giveChange(); // <-- working on this method
+						 v.giveChange(); // <-- prints change in coins
                          break; // <-- ends true loop
 					}
 				}

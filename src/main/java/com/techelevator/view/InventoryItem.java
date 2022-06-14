@@ -3,11 +3,10 @@ package com.techelevator.view;
 public abstract class InventoryItem {
     private String name;
     private Double price;
-    private int currentStock = 5; // <--added stock as 5 for all classes that extends... still working on this
+    private int currentStock = 5; // <--added stock as 5 for all classes that extends
 
     //added method to decrement currentStock at the bottom
-    //also created 2 argument constructors for classes that extend, saves code...for now
-
+    //also created 2 argument constructors for classes that extend, saves code
 
     public InventoryItem(String name, Double price) {
         this.name = name;
