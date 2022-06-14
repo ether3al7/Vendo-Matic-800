@@ -17,12 +17,12 @@ public class Log {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss: a"); // lowercase hh for 12-hour format, a for am/pm
     LocalDateTime now = LocalDateTime.now(); //<-- getting local time
 
-    public void log(String activity){
+    public void log(String activity){ //<-- using one parameter for activity
 
         System.out.println(dtf.format(now) + " " + activity);
     }
 
-    public void log(String productName, String code){
+    public void log(String productName, String code){ //<-- using 2 parameters for product name & code
         System.out.println(dtf.format(now) + " " + productName + " " + code);
     }
 

@@ -1,11 +1,9 @@
 package com.techelevator;
 
 
-import com.techelevator.view.LogItems;
 import com.techelevator.view.Menu;
 import com.techelevator.view.VendingMachine;
 
-import java.io.File;
 import java.util.Scanner;
 
 public class VendingMachineCLI {
