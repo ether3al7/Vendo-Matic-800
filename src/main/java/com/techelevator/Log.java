@@ -14,7 +14,7 @@ public class Log {
     //>01/01/2016 12:01:35 PM GIVE CHANGE:   $7.50 $0.00
     // date        time        activity  strt amnt| end amnt
     File file = new File("capstone-1/Log.txt");
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss: a"); // lowercase hh for 12-hour format, a for am/pm
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a"); // lowercase hh for 12-hour format, a for am/pm
     LocalDateTime now = LocalDateTime.now(); //<-- getting local time
 
     public void log(String activity){ //<-- using one parameter for activity

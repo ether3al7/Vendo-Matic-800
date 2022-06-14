@@ -57,13 +57,14 @@ public class VendingMachineCLI {
 						v.selectProduct(codeEntered);   // <-- Selecting product, takes in String parameter
 
 					} else if (nextChoice.equals(FINISH_TRANSACTION)) {
-						 v.giveChange(); // <-- prints change in coins
+						 v.giveChange(); // <-- prints change in coins, updates amount to 0
                          break; // <-- ends true loop
 					}
 				}
 
 			}else if (choice.equals(MAIN_MENU_EXIT)){
-                System.exit(0); // <-- Terminates program
+              //  System.exit(0); // <-- Terminates program
+				  break; //<-- ends loop, same as above
 			}
 		}
 
