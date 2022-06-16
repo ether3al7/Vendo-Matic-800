@@ -20,6 +20,8 @@ public class VendingMachineCLI {
 	File file = new File("capstone-1/vendingmachine.csv");
 	File logFile = new File("capstone-1/Log.txt");
 
+
+
 	public VendingMachineCLI(Menu menu) {
 		this.menu = menu;
 	}

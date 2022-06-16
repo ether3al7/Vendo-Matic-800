@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 public class Log {
 
-   // static File file = new File("capstone-1/Log.txt");
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a"); // lowercase hh for 12-hour format, a for am/pm
     LocalDateTime now = LocalDateTime.now(); //<-- getting local time
 
@@ -27,7 +26,6 @@ public class Log {
       }
 
     public void log(String activity, File file) { //<-- added file since file in main is different from file found in test
-
 //            try {
 //                output = new FileOutputStream(file); //<-- making sure file is found
 //            } catch (FileNotFoundException e) {

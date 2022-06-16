@@ -28,42 +28,44 @@ public class VendingMachine {
          //  String csvFile = "capstone-1/vendingmachine.csv";
         try {
          //   File file = new File(csvFile);
-            Scanner sc = new Scanner(file);
-          //  System.out.println(sc.nextLine());
+            Scanner sc = new Scanner(file); //<-- reading file
             while(sc.hasNextLine()){
 
-                 line = sc.nextLine();
-                 String[]products = line.split("\\|");
+                 line = sc.nextLine(); //<-- storing line into string
+                 String[]products = line.split("\\|");//<-- using .split to turn line in file to array
 
                  //A1|Potato Crisps|3.05|Chip
                 // 0        1        2    3
 
-                // using .split to turn file text into array
-                // adding products array to treeMap
-                // storing productCode[0] as key, inventoryItem as value in map
-                // inventoryItem takes in parameters String name & Double price
+                // each line in file represents an item
+                // index 3 of each line represents the inventoryItem / product type
+                // we need to check the product type in order to get the appropriate String when dispensed
+
+                // below, we're adding the inventoryItem to the treeMap as the value, and taking the product code as the key
+
+                // inventoryItem takes in two parameters, String name & Double price
                 // all inventoryItems have currentStock initialized to 5 & have getters to access values outside of class
 
                 switch (products[3]) { //<-- checking index 3 for each line, using switch to eliminate same if condition
+
                     case "Chip":    // <-- if index 3 of split string = Chip
                         Double chipPrice = Double.parseDouble(products[2]); // <-- parsing string index 2 to double, this will be passed thru constructor
                         Chip chip = new Chip(products[1], chipPrice);   // <--creating instance of chip, which takes in a String name and double price
                         vendingMachineStock.put(products[0], chip);   // <-- adding product code as String key, adding chip as inventoryItem value for map
-
-
                         break;
+
                     case "Drink":
                         Double drinkPrice = Double.parseDouble(products[2]);
                         Drink drink = new Drink(products[1], drinkPrice);
                         vendingMachineStock.put(products[0], drink);
-
                         break;
+
                     case "Candy":
                         Double candyPrice = Double.parseDouble(products[2]);
                         Candy candy = new Candy(products[1], candyPrice);
                         vendingMachineStock.put(products[0], candy);
-
                         break;
+
                     case "Gum":
                         Double gumPrice = Double.parseDouble(products[2]);
                         Gum gum = new Gum(products[1], gumPrice);
@@ -166,5 +168,9 @@ public class VendingMachine {
 
     public Map<String, InventoryItem> getVendingMachineStock() {
         return vendingMachineStock;
+    }
+
+    public Double getAmount() {
+        return amount;
     }
 }
