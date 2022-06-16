@@ -1,7 +1,6 @@
-package com.techelevator.view;
+package com.techelevator;
 
-import com.techelevator.Log;
-
+import com.techelevator.view.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
@@ -19,17 +18,18 @@ public class VendingMachine {
     private static final double NICKEL = 0.05;
     private static final DecimalFormat df = new DecimalFormat("0.00"); //<-- using this to format double, w/o it prints 0.00
     Log log = new Log(); //<-- creating instance of log to use within methods
+   // File logFile = new File("capstone-1/Log.txt"); //<-- passing thru file found in main
 
 
-    //methods
-    public void createVendingMachine(){
+    public void createVendingMachine(File file){ //<-- added file since file in main is different from file found in test
         //created map to store .csv file, looping thru to get text
         //stored abstract class InventoryItem as value for map
         String line = "";
-        String csvFile = "capstone-1/vendingmachine.csv";
+         //  String csvFile = "capstone-1/vendingmachine.csv";
         try {
-            File file = new File(csvFile);
+         //   File file = new File(csvFile);
             Scanner sc = new Scanner(file);
+          //  System.out.println(sc.nextLine());
             while(sc.hasNextLine()){
 
                  line = sc.nextLine();
@@ -44,17 +44,16 @@ public class VendingMachine {
                 // inventoryItem takes in parameters String name & Double price
                 // all inventoryItems have currentStock initialized to 5 & have getters to access values outside of class
 
-                switch (products[3]) {
+                switch (products[3]) { //<-- checking index 3 for each line, using switch to eliminate same if condition
                     case "Chip":    // <-- if index 3 of split string = Chip
                         Double chipPrice = Double.parseDouble(products[2]); // <-- parsing string index 2 to double, this will be passed thru constructor
-                        Chip chip = new Chip(products[1], chipPrice);   // <--creating instance of chip, which takes in a String name and double
+                        Chip chip = new Chip(products[1], chipPrice);   // <--creating instance of chip, which takes in a String name and double price
                         vendingMachineStock.put(products[0], chip);   // <-- adding product code as String key, adding chip as inventoryItem value for map
 
 
                         break;
                     case "Drink":
-                        Double drinkPrice = Double.parseDouble(products[2]); // same as above except for Drink
-
+                        Double drinkPrice = Double.parseDouble(products[2]);
                         Drink drink = new Drink(products[1], drinkPrice);
                         vendingMachineStock.put(products[0], drink);
 
@@ -89,7 +88,7 @@ public class VendingMachine {
         }
     }
 
-    public double selectProduct(String productCode) {
+    public void selectProduct(String productCode, File file) {
         String startAmount = df.format(amount); //<-- using this to store amount before code below executes
         String amountInDfFormat = ""; //<-- using this for stylistic purposes in method print
         // w/o df.format will print one decimal if 0 or .00001 after. Ex: 3.3 or 3.30001 instead of 3.30
@@ -111,7 +110,8 @@ public class VendingMachine {
                         System.out.println(vendingMachineStock.get(productCode).dispense()); //<-- printing String message
 
                         String productName = vendingMachineStock.get(productCode).getName(); //<-- getting name for log
-                        log.log(productName + " " + productCode + " $" + startAmount + " $" + amountInDfFormat);
+
+                       log.log(productName + " " + productCode + " $" + startAmount + " $" + amountInDfFormat, file );
                         // ^logs using activity parameter
                         System.out.println("Amount Remaining: $" + amountInDfFormat); //<-- printing amount as string w 2 mandatory decimals
 
@@ -123,22 +123,20 @@ public class VendingMachine {
                     System.out.println("Amount Remaining: $" + startAmount);
                 }
             }
-          return amount;
 
     }
 
-    public void feedMoney(Double amountEntered){ //<-- method call updates amount variable
-
+    public void feedMoney(Double amountEntered, File file){ //<-- method call updates amount variable
 
         double startAmount = amount; //<-- amount before code below executes
         this.amount += amountEntered; //<-- updating amount
 
         System.out.println("Amount Remaining: $" + df.format(amount)); //<-- using df.format to print w 2 decimals
-        log.log("FEED MONEY: $" + df.format(startAmount) + " $" + df.format(amount)); //<-- df.format takes in double, prints w 2 decimals
+        log.log("FEED MONEY: $" + df.format(startAmount) + " $" + df.format(amount), file);
 
     }
 
-    public void giveChange(){
+    public void giveChange(File file){
         double startAmount = amount; //<-- amount before code below executes
 
         int quartersReturned = 0;
@@ -163,7 +161,7 @@ public class VendingMachine {
               }
           }
           System.out.println("Your change is: " + quartersReturned + " Quarters, " + dimesReturned + " Dimes, " + nickelsReturned + " Nickels.");
-          log.log("GIVE CHANGE: $" + df.format(startAmount) + " $" + df.format(amount));
+          log.log("GIVE CHANGE: $" + df.format(startAmount) + " $" + df.format(amount),file);
     }
 
     public Map<String, InventoryItem> getVendingMachineStock() {

@@ -2,8 +2,8 @@ package com.techelevator;
 
 
 import com.techelevator.view.Menu;
-import com.techelevator.view.VendingMachine;
 
+import java.io.File;
 import java.util.Scanner;
 
 public class VendingMachineCLI {
@@ -17,6 +17,9 @@ public class VendingMachineCLI {
 	private static final String[] PURCHASE_OPTIONS = {FEED_MONEY, SELECT_PRODUCT, FINISH_TRANSACTION};
 	private Menu menu;
 
+	File file = new File("capstone-1/vendingmachine.csv");
+	File logFile = new File("capstone-1/Log.txt");
+
 	public VendingMachineCLI(Menu menu) {
 		this.menu = menu;
 	}
@@ -25,7 +28,7 @@ public class VendingMachineCLI {
 		Scanner sc = new Scanner(System.in);
 		VendingMachine v  = new VendingMachine(); // <-- THIS was initially inside the While(True), in line 35, new instance was created everytime
 		// in a new instance of vendingMachine, amount is initialized to 0, currentStock is set to 5;
-		v.createVendingMachine();
+		v.createVendingMachine(file);
 
 		while (true) {
 
@@ -47,7 +50,7 @@ public class VendingMachineCLI {
 							System.out.println("Please Enter Amount");
 							double amountEntered = Double.parseDouble(sc.nextLine());
 							if(amountEntered == 1 || amountEntered == 2 || amountEntered == 5 || amountEntered == 10) {
-								v.feedMoney(amountEntered); // <-- Enters money into vendingMachine, takes in double parameter
+								v.feedMoney(amountEntered, logFile); // <-- Enters money into vendingMachine, takes in double parameter
 							}else {
 								System.out.println("Not A Valid Input!");
 							}
@@ -60,16 +63,15 @@ public class VendingMachineCLI {
 
 						System.out.println("Enter Code");
 						String codeEntered = sc.nextLine();
-						v.selectProduct(codeEntered);   // <-- Selecting product, takes in String parameter
+						v.selectProduct(codeEntered, logFile);   // <-- Selecting product, takes in String parameter
 
 					} else if (nextChoice.equals(FINISH_TRANSACTION)) {
-						 v.giveChange(); // <-- prints change in coins, updates amount to 0
+						 v.giveChange(logFile); // <-- prints change in coins, updates amount to 0
                          break; // <-- ends true loop
 					}
 				}
 
 			}else if (choice.equals(MAIN_MENU_EXIT)){
-              //  System.exit(0); // <-- Terminates program
 				  break; //<-- ends loop, same as above
 			}
 		}
