@@ -18,16 +18,12 @@ public class VendingMachine {
     private static final double NICKEL = 0.05;
     private static final DecimalFormat df = new DecimalFormat("0.00"); //<-- using this to format double, w/o it prints 0.00
     Log log = new Log(); //<-- creating instance of log to use within methods
-   // File logFile = new File("capstone-1/Log.txt"); //<-- passing thru file found in main
-
 
     public void createVendingMachine(File file){ //<-- added file since file in main is different from file found in test
         //created map to store .csv file, looping thru to get text
         //stored abstract class InventoryItem as value for map
         String line = "";
-         //  String csvFile = "capstone-1/vendingmachine.csv";
         try {
-         //   File file = new File(csvFile);
             Scanner sc = new Scanner(file); //<-- reading file
             while(sc.hasNextLine()){
 
@@ -40,9 +36,7 @@ public class VendingMachine {
                 // each line in file represents an item
                 // index 3 of each line represents the inventoryItem / product type
                 // we need to check the product type in order to get the appropriate String when dispensed
-
                 // below, we're adding the inventoryItem to the treeMap as the value, and taking the product code as the key
-
                 // inventoryItem takes in two parameters, String name & Double price
                 // all inventoryItems have currentStock initialized to 5 & have getters to access values outside of class
 

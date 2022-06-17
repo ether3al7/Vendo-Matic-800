@@ -17,10 +17,10 @@ public class VendingMachineCLI {
 	private static final String[] PURCHASE_OPTIONS = {FEED_MONEY, SELECT_PRODUCT, FINISH_TRANSACTION};
 	private Menu menu;
 
+	//System.getProperty("user.dir"); can use this to access files anywhere
+
 	File file = new File("capstone-1/vendingmachine.csv");
 	File logFile = new File("capstone-1/Log.txt");
-
-
 
 	public VendingMachineCLI(Menu menu) {
 		this.menu = menu;
@@ -48,20 +48,21 @@ public class VendingMachineCLI {
 
 					if (nextChoice.equals(FEED_MONEY)) {
 						// Added try since .parseDouble may crash program if user inputs invalid format
-                        try {
-							System.out.println("Please Enter Amount");
-							double amountEntered = Double.parseDouble(sc.nextLine());
-							if(amountEntered == 1 || amountEntered == 2 || amountEntered == 5 || amountEntered == 10) {
-								v.feedMoney(amountEntered, logFile); // <-- Enters money into vendingMachine, takes in double parameter
-							}else {
-								System.out.println("Not A Valid Input!");
+							try {
+								System.out.println("Please Enter Amount");
+								double amountEntered = Double.parseDouble(sc.nextLine());
+								if (amountEntered == 1 || amountEntered == 2 || amountEntered == 5 || amountEntered == 10) {
+									v.feedMoney(amountEntered, logFile); // <-- Enters money into vendingMachine, takes in double parameter
+								} else {
+									System.out.println("Not A Valid Input!");
+								}
+
+							} catch (NumberFormatException e) {
+								System.err.println("Not A Valid Entry!");
 							}
 
-						} catch (NumberFormatException e) {
-							System.err.println("Not A Valid Entry!");
-						}
-
 					} else if (nextChoice.equals(SELECT_PRODUCT)) {
+						v.displayVendingMachine();
 
 						System.out.println("Enter Code");
 						String codeEntered = sc.nextLine();
@@ -72,7 +73,6 @@ public class VendingMachineCLI {
                          break; // <-- ends true loop
 					}
 				}
-
 			}else if (choice.equals(MAIN_MENU_EXIT)){
 				  break; //<-- ends loop, same as above
 			}

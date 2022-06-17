@@ -10,9 +10,6 @@ public class Log {
 
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a"); // lowercase hh for 12-hour format, a for am/pm
     LocalDateTime now = LocalDateTime.now(); //<-- getting local time
-
-    // Rather than always creating a new instance of PrintWriter in the log() method,
-    // move the local PrintWriter variable out of the method, and make it a static class variable.
      FileOutputStream output; //Creates a file output stream to write to the file
      PrintWriter writer;
 
@@ -26,11 +23,7 @@ public class Log {
       }
 
     public void log(String activity, File file) { //<-- added file since file in main is different from file found in test
-//            try {
-//                output = new FileOutputStream(file); //<-- making sure file is found
-//            } catch (FileNotFoundException e) {
-//                throw new RuntimeException(e);
-//            }
+
             if (writer == null) {       // if writer is null create new printWriter
                 try {
                     writer = new PrintWriter(file); //<-- creating instance of PrintWriter
