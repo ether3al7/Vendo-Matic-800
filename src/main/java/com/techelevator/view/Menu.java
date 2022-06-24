@@ -28,7 +28,7 @@ public class Menu {
 		Object choice = null;
 		String userInput = in.nextLine();
 		try {
-			int selectedOption = Integer.valueOf(userInput);
+			int selectedOption = Integer.parseInt(userInput);
 			if (selectedOption > 0 && selectedOption <= options.length) {
 				choice = options[selectedOption - 1];
 			}
@@ -49,5 +49,40 @@ public class Menu {
 		}
 		out.print(System.lineSeparator() + "Please choose an option >>> ");
 		out.flush();
+	}
+
+	// Function to hide the Sales Report in the Main Menu
+
+	public Object getMainMenuOptions(Object[] options) {
+		Object choice = null;
+		while (choice == null) {
+			displayMenuOptions(options);
+			choice = getMainMenuOptionsUserInput(options);
+		}
+		return choice;
+	}
+
+	private Object getMainMenuOptionsUserInput(Object[] options) {
+		Object choice = null;
+		String userInput = in.nextLine();
+		try {
+			int selectedOption = Integer.parseInt(userInput);
+			if (selectedOption > 0 && selectedOption <= options.length) {
+				choice = options[selectedOption - 1];
+			}
+			if (selectedOption == options.length + 1) {
+				choice = "Sales Report";
+				out.println(System.lineSeparator() + "*** OPEN SESAME!! ^_^ ***" + System.lineSeparator());
+				out.print("Please choose an option >>> ");
+				out.print(System.lineSeparator());
+			}
+
+		} catch (NumberFormatException e) {
+			// eat the exception, an error message will be displayed below since choice will be null
+		}
+		if (choice == null) {
+			out.println(System.lineSeparator() + "*** " + userInput + " is not a valid option ***" + System.lineSeparator());
+		}
+		return choice;
 	}
 }

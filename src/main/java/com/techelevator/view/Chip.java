@@ -9,7 +9,7 @@ public class Chip extends InventoryItem {
     @Override
     public String dispense(){
 
-        return "Crunch Crunch, Yum";
+        return "Crunch Crunch, Yum!";
 
     }
 

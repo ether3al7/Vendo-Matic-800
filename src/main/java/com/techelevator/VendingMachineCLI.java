@@ -4,29 +4,37 @@ package com.techelevator;
 import com.techelevator.view.Menu;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
+
 
 public class VendingMachineCLI {
 	private static final String MAIN_MENU_OPTION_DISPLAY_ITEMS = "Display Vending Machine Items";
 	private static final String MAIN_MENU_OPTION_PURCHASE = "Purchase";
 	private static final String MAIN_MENU_EXIT = "Exit";
-	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_DISPLAY_ITEMS, MAIN_MENU_OPTION_PURCHASE, MAIN_MENU_EXIT };
+	private static final String MAIN_MENU_OPTION_SALES_REPORT_HIDDEN = "Sales Report";
+	private static final String[] MAIN_MENU_OPTIONS = {MAIN_MENU_OPTION_DISPLAY_ITEMS, MAIN_MENU_OPTION_PURCHASE, MAIN_MENU_EXIT};
 	private static final String FEED_MONEY = "Feed Money";
 	private static final String SELECT_PRODUCT = "Select Product";
 	private static final String FINISH_TRANSACTION = "Finish Transaction";
 	private static final String[] PURCHASE_OPTIONS = {FEED_MONEY, SELECT_PRODUCT, FINISH_TRANSACTION};
-	private Menu menu;
+
+	private final Menu menu;
 
 	//System.getProperty("user.dir"); can use this to access files anywhere
 
-	File file = new File("capstone-1/vendingmachine.csv");
-	File logFile = new File("capstone-1/Log.txt");
+	File file = new File("vendingmachine.csv");
+	 File logFile = new File("Log.txt");
 
 	public VendingMachineCLI(Menu menu) {
 		this.menu = menu;
+
 	}
 
-	public void run() {
+	public void run() throws FileNotFoundException {
+		System.out.println("************************************");
+		System.out.println("     Welcome To Vendo-Matic 800     ");
+		System.out.println("************************************");
 		Scanner sc = new Scanner(System.in);
 		VendingMachine v  = new VendingMachine(); // <-- THIS was initially inside the While(True), in line 35, new instance was created everytime
 		// in a new instance of vendingMachine, amount is initialized to 0, currentStock is set to 5;
@@ -34,7 +42,7 @@ public class VendingMachineCLI {
 
 		while (true) {
 
-			String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
+			String choice = (String) menu.getMainMenuOptions(MAIN_MENU_OPTIONS);
 
 			if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
 
@@ -73,13 +81,19 @@ public class VendingMachineCLI {
                          break; // <-- ends true loop
 					}
 				}
-			}else if (choice.equals(MAIN_MENU_EXIT)){
-				  break; //<-- ends loop, same as above
+			}else if (choice.equals(MAIN_MENU_EXIT)) {
+				System.out.println("***************************************************");
+				System.out.println("     Thank you For Shopping At Vendo-Matic 800     ");
+				System.out.println("***************************************************");
+				break; //<-- ends loop, same as above
+
+			} else if(choice.equals(MAIN_MENU_OPTION_SALES_REPORT_HIDDEN)){
+				v.SalesReport();
 			}
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		Menu menu = new Menu(System.in, System.out);
 		VendingMachineCLI cli = new VendingMachineCLI(menu);
 		cli.run();

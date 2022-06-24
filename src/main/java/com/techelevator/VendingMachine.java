@@ -1,16 +1,17 @@
 package com.techelevator;
 
 import com.techelevator.view.*;
-import java.io.File;
-import java.io.FileNotFoundException;
+
+import java.io.*;
 import java.text.DecimalFormat;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.TreeMap;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
 
 public class VendingMachine {
 
-    private final Map<String, InventoryItem>vendingMachineStock = new TreeMap<>(); // <-- TreeMap sorts key by ascending order
+    private final Map<String, InventoryItem> vendingMachineStock = new TreeMap<>(); // <-- TreeMap sorts key by ascending order
     // hashmaps are unordered, when printed keys rows will be randomized
     private Double amount = 0.00; // storing money user inputs
     private static final double QUARTER = 0.25;
@@ -18,19 +19,20 @@ public class VendingMachine {
     private static final double NICKEL = 0.05;
     private static final DecimalFormat df = new DecimalFormat("0.00"); //<-- using this to format double, w/o it prints 0.00
     Log log = new Log(); //<-- creating instance of log to use within methods
+    public List<InventoryItem> inventoryList = new ArrayList<InventoryItem>();
 
-    public void createVendingMachine(File file){ //<-- added file since file in main is different from file found in test
+    public void createVendingMachine(File file) { //<-- added file since file in main is different from file found in test
         //created map to store .csv file, looping thru to get text
         //stored abstract class InventoryItem as value for map
         String line = "";
         try {
             Scanner sc = new Scanner(file); //<-- reading file
-            while(sc.hasNextLine()){
+            while (sc.hasNextLine()) {
 
-                 line = sc.nextLine(); //<-- storing line into string
-                 String[]products = line.split("\\|");//<-- using .split to turn line in file to array
+                line = sc.nextLine(); //<-- storing line into string
+                String[] products = line.split("\\|");//<-- using .split to turn line in file to array
 
-                 //A1|Potato Crisps|3.05|Chip
+                //A1|Potato Crisps|3.05|Chip
                 // 0        1        2    3
 
                 // each line in file represents an item
@@ -73,7 +75,7 @@ public class VendingMachine {
         }
     }
 
-    public void displayVendingMachine(){ //<-- prints csv file
+    public void displayVendingMachine() { //<-- prints csv file
         //looping thru using getters in sub classes to print values
         for (Map.Entry<String, InventoryItem> m : vendingMachineStock.entrySet()) {
             if (m.getValue().getCurrentStock() == 0) { //<-- if sold out
@@ -90,39 +92,39 @@ public class VendingMachine {
         // w/o df.format will print one decimal if 0 or .00001 after. Ex: 3.3 or 3.30001 instead of 3.30
         // will update amountAsString using df.format once amount is updated below
 
-            if (!(vendingMachineStock.containsKey(productCode))) { // <-- if doesn't exist
-                System.out.println("Not a valid entry");
+        if (!(vendingMachineStock.containsKey(productCode))) { // <-- if doesn't exist
+            System.out.println("Not a valid entry");
 
-            } else {   //<-- else, productCode user inputs DOES exist
+        } else {   //<-- else, productCode user inputs DOES exist
 
-                if (vendingMachineStock.get(productCode).getCurrentStock() > 0) { // <-- if product is in stock
+            if (vendingMachineStock.get(productCode).getCurrentStock() > 0) { // <-- if product is in stock
 
-                    if (amount >= vendingMachineStock.get(productCode).getPrice()) { //<-- if can afford item
+                if (amount >= vendingMachineStock.get(productCode).getPrice()) { //<-- if can afford item
 
-                        amount -= vendingMachineStock.get(productCode).getPrice(); //<-- updating amount variable
-                        amountInDfFormat = df.format(Math.round((amount * 100.00)) /100.00); //<-- using Math.round to round decimals
-                        //                 ^ using df.format to require 2 decimals regardless if 0 after (Stylistic purpose)
-                        vendingMachineStock.get(productCode).decreaseCurrentStock(); //<-- decreasing stock in map by 1
-                        System.out.println(vendingMachineStock.get(productCode).dispense()); //<-- printing String message
+                    amount -= vendingMachineStock.get(productCode).getPrice(); //<-- updating amount variable
+                    amountInDfFormat = df.format(Math.round((amount * 100.00)) / 100.00); //<-- using Math.round to round decimals
+                    //                 ^ using df.format to require 2 decimals regardless if 0 after (Stylistic purpose)
+                    vendingMachineStock.get(productCode).decreaseCurrentStock(); //<-- decreasing stock in map by 1
+                    System.out.println(vendingMachineStock.get(productCode).dispense()); //<-- printing String message
 
-                        String productName = vendingMachineStock.get(productCode).getName(); //<-- getting name for log
+                    String productName = vendingMachineStock.get(productCode).getName(); //<-- getting name for log
 
-                       log.log(productName + " " + productCode + " $" + startAmount + " $" + amountInDfFormat, file );
-                        // ^logs using activity parameter
-                        System.out.println("Amount Remaining: $" + amountInDfFormat); //<-- printing amount as string w 2 mandatory decimals
+                    log.log(productName + " " + productCode + " $" + startAmount + " $" + amountInDfFormat, file);
+                    // ^logs using activity parameter
+                    System.out.println("Amount Remaining: $" + amountInDfFormat); //<-- printing amount as string w 2 mandatory decimals
 
-                    } else { //<-- if amount isn't enough
-                        System.out.println("Not Enough Money!");
-                    }
-                } else {   //<-- currentStock = 0
-                    System.out.println("Sold Out!");
-                    System.out.println("Amount Remaining: $" + startAmount);
+                } else { //<-- if amount isn't enough
+                    System.out.println("Not Enough Money!");
                 }
+            } else {   //<-- currentStock = 0
+                System.out.println("Sold Out!");
+                System.out.println("Amount Remaining: $" + startAmount);
             }
+        }
 
     }
 
-    public void feedMoney(Double amountEntered, File file){ //<-- method call updates amount variable
+    public void feedMoney(Double amountEntered, File file) { //<-- method call updates amount variable
 
         double startAmount = amount; //<-- amount before code below executes
         this.amount += amountEntered; //<-- updating amount
@@ -132,39 +134,69 @@ public class VendingMachine {
 
     }
 
-    public void giveChange(File file){
+    public void giveChange(File file) {
         double startAmount = amount; //<-- amount before code below executes
 
         int quartersReturned = 0;
         int dimesReturned = 0;
         int nickelsReturned = 0;
 
-          while ( amount > 0.00) {
+        while (amount > 0.00) {
 
-              if (amount >= QUARTER) { //<-- using final variables declared above
-                  amount = Math.round((amount - QUARTER) * 100.00)/100.00;
-                  //^amount is first subtracted by coin, then multiplied by 100 so Math can round properly,
-                  // then divided by 100 after rounding to get the correct, rounded value
-                  quartersReturned++;
+            if (amount >= QUARTER) { //<-- using final variables declared above
+                amount = Math.round((amount - QUARTER) * 100.00) / 100.00;
+                //^amount is first subtracted by coin, then multiplied by 100 so Math can round properly,
+                // then divided by 100 after rounding to get the correct, rounded value
+                quartersReturned++;
 
-              } else if (amount >= DIME) {
-                  amount = Math.round((amount - DIME) * 100.00)/100.00;
-                  dimesReturned++;
+            } else if (amount >= DIME) {
+                amount = Math.round((amount - DIME) * 100.00) / 100.00;
+                dimesReturned++;
 
-              } else if (amount >= NICKEL) {
-                  amount = Math.round((amount - NICKEL) * 100.00)/100.00;
-                  nickelsReturned++;
-              }
-          }
-          System.out.println("Your change is: " + quartersReturned + " Quarters, " + dimesReturned + " Dimes, " + nickelsReturned + " Nickels.");
-          log.log("GIVE CHANGE: $" + df.format(startAmount) + " $" + df.format(amount),file);
+            } else if (amount >= NICKEL) {
+                amount = Math.round((amount - NICKEL) * 100.00) / 100.00;
+                nickelsReturned++;
+            }
+        }
+        System.out.println("Your change is: " + quartersReturned + " Quarters, " + dimesReturned + " Dimes, " + nickelsReturned + " Nickels.");
+        log.log("GIVE CHANGE: $" + df.format(startAmount) + " $" + df.format(amount), file);
     }
 
-    public Map<String, InventoryItem> getVendingMachineStock() {
-        return vendingMachineStock;
+    //Creates "Hidden" Sales Report of all items sold from the Vendo-Matic 800
+
+
+    public void SalesReport() throws FileNotFoundException {
+        LocalDateTime timeStamp = LocalDateTime.now();
+        DateTimeFormatter stamp = DateTimeFormatter.ofPattern("MM_dd_yyyy_hh_mm_ss_a");  // lowercase hh for 12-hour format, a for am/pm
+        String dateTimeNow = stamp.format(timeStamp);
+
+
+        new File("Reports").mkdir();
+        File salesReport = new File(("Reports/" + dateTimeNow + "_SalesReport.txt"));
+
+            try (PrintWriter writer = new PrintWriter(salesReport)) {
+                double totalSales = 0;
+                for (Map.Entry<String, InventoryItem> num : vendingMachineStock.entrySet()) {
+
+                    totalSales = totalSales + ((5 - num.getValue().getCurrentStock()) * num.getValue().getPrice());
+                    writer.write((num.getValue().getName()) + ("|") + (5 - num.getValue().getCurrentStock()));
+                    writer.write("\n");
+                }
+                String totalAmount = String.format("%.2f", totalSales);
+                writer.println();
+                writer.write("*****Total Sales***** $" + (totalAmount));
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
     }
 
-    public Double getAmount() {
-        return amount;
-    }
-}
+
+            public Map<String, InventoryItem> getVendingMachineStock () {
+                return vendingMachineStock;
+            }
+
+            public Double getAmount () {
+                return amount;
+            }
+        }
